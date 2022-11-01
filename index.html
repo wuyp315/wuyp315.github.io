@@ -185,7 +185,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-11-01 21:34:02 / 修改时间：22:42:27" itemprop="dateCreated datePublished" datetime="2022-11-01T21:34:02+08:00">2022-11-01</time>
+      <time title="创建时间：2022-11-01 21:34:02 / 修改时间：22:44:42" itemprop="dateCreated datePublished" datetime="2022-11-01T21:34:02+08:00">2022-11-01</time>
     </span>
 
   
@@ -200,7 +200,7 @@
     <div class="post-body" itemprop="articleBody">
           <h1 id="一、MySQL基础"><a href="#一、MySQL基础" class="headerlink" title="一、MySQL基础"></a>一、MySQL基础</h1><h2 id="1、数据库相关概念"><a href="#1、数据库相关概念" class="headerlink" title="1、数据库相关概念"></a>1、数据库相关概念</h2><p>以前做系统，数据持久化的存储采用的是文件存储。存储到文件中可以达到系统关闭数据不会丢失的效果，当然文件存储也有它的弊端。</p>
 <p>假设在文件中存储以下的数据：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">姓名	年龄	性别	   住址</span><br><span class="line">张三	23	  男	   北京西三旗</span><br><span class="line">李四	24	  女	   北京西二旗</span><br><span class="line">王五	25	  男	   西安软件新城</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">姓名	年龄	性别	   住址</span><br><span class="line">张三	23	 男	   北京西三旗</span><br><span class="line">李四	24	 女	   北京西二旗</span><br><span class="line">王五	25	 男	   西安软件新城</span><br></pre></td></tr></table></figure>
 
 <p>现要将李四这条数据的性别数据改为男，我们现学习的IO技术可以通过将所有的数据读取到内存中，然后进行修改再存到该文件中。通过这种方式操作存在很大问题，现在只有三条数据，如果文件中存储1T的数据，那么就会发现内存根本就存储不了。</p>
 <p>现需要既能持久化存储数据，也要能避免上述问题的技术使用在我们的系统中。数据库就是这样的一门技术。</p>
@@ -218,7 +218,7 @@
 <p>在电脑上安装了数据库管理系统后，就可以通过数据库管理系统创建数据库来存储数据，也可以通过该系统对数据库中的数据进行数据的增删改查相关的操作。我们平时说的MySQL数据库其实是MySQL数据库管理系统。</p>
 <p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101214500526.png" alt="image-20221101214500526"></p>
 <p>通过上面的描述，大家应该已经知道了<strong>数据库管理系统</strong> 和 <strong>数据库</strong> 的关系。</p>
-<h3 id="1-3、常见的数据库管理系统"><a href="#1-3、常见的数据库管理系统" class="headerlink" title="1.3、常见的数据库管理系统"></a>1.3、常见的数据库管理系统</h3><p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101214624398.png" alt="image-20221101214624398"></p>
+<h3 id="1-3、常见的数据库管理系统"><a href="#1-3、常见的数据库管理系统" class="headerlink" title="1.3、常见的数据库管理系统"></a>1.3、常见的数据库管理系统</h3><p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101214624398.png" alt="image-20221101214624398"></p>
 <p>接下来对上面列举的数据库管理系统进行简单的介绍：</p>
 <ul>
 <li>Oracle：收费的大型数据库，Oracle 公司的产品</li>
@@ -230,7 +230,7 @@
 <li>MariaDB：开源免费中小型的数据库</li>
 </ul>
 <p>我们课程上学习的是MySQL数据库管理系统，PostgreSQL在一些公司也有使用，此时大家肯定会想以后在公司中如果使用我们没有学习过程的PostgreSQL数据库管理系统怎么办？这点大家大可不必担心，如下图所示：</p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101215035703.png" alt="image-20221101215035703"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101215035703.png" alt="image-20221101215035703"></p>
 <p>可以通过数据库管理系统操作数据库，对数据库中的数据进行增删改查操作，而怎么样让用户跟数据库管理系统打交道呢？就可以通过一门编程语言（SQL）来实现。</p>
 <h3 id="1-4、SQL"><a href="#1-4、SQL" class="headerlink" title="1.4、SQL"></a>1.4、SQL</h3><ul>
 <li>英文：Structured Query Language，简称 SQL，结构化查询语言</li>
@@ -239,9 +239,9 @@
 </ul>
 <h2 id="2、MySQL"><a href="#2、MySQL" class="headerlink" title="2、MySQL"></a>2、MySQL</h2><h3 id="2-1、MySQL安装"><a href="#2-1、MySQL安装" class="headerlink" title="2.1、MySQL安装"></a>2.1、MySQL安装</h3><h4 id="2-1-1、下载"><a href="#2-1-1、下载" class="headerlink" title="2.1.1、下载"></a>2.1.1、下载</h4><p><a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/community/">https://downloads.mysql.com/archives/community/</a></p>
 <p>点开上面的链接就能看到如下界面：</p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101215627181.png" alt="image-20221101215627181"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101215627181.png" alt="image-20221101215627181"></p>
 <p>选择选择和自己<strong>系统位数</strong>相对应的版本点击右边的<strong>Download</strong>，此时会进到另一个页面，同样在接近页面底部的地方找到如下图所示的位置：</p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101215749409.png" alt="image-20221101215749409"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101215749409.png" alt="image-20221101215749409"></p>
 <p>不用理会上面的登录和注册按钮，直接点击 <strong>No thanks, just start my download</strong>.就可以下载。</p>
 <h4 id="2-1-2、安装-解压"><a href="#2-1-2、安装-解压" class="headerlink" title="2.1.2、安装(解压)"></a>2.1.2、安装(解压)</h4><p>下载完成后我们得到的是一个压缩包，将其解压，我们就可以得到MySQL 5.7.24的软件本体了(就是一个文件夹)，我们可以把它放在你想安装的位置。</p>
 <h3 id="2-2、MySQL卸载"><a href="#2-2、MySQL卸载" class="headerlink" title="2.2、MySQL卸载"></a>2.2、MySQL卸载</h3><p>如果你想卸载MySQL，也很简单。</p>
@@ -258,19 +258,19 @@
 <p>环境变量里面有很多选项，这里我们只用到<code>Path</code>这个参数。为什么在初始化的开始要添加环境变量呢？<br>在黑框(即CMD)中输入一个可执行程序的名字，Windows会先在环境变量中的<code>Path</code>所指的路径中寻找一遍，如果找到了就直接执行，没找到就在当前工作目录找，如果还没找到，就报错。我们添加环境变量的目的就是能够在任意一个黑框直接调用MySQL中的相关程序而不用总是修改工作目录，大大简化了操作。</p>
 </blockquote>
 <p>右键<strong>此电脑</strong>→<strong>属性</strong>，点击<strong>高级系统设置</strong></p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\1556823-20181220220242472-524708778.png" alt="img" style="zoom:90%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/1556823-20181220220242472-524708778.png" alt="img" style="zoom:90%;">
 
 <p>点击<strong>环境变量</strong></p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\1556823-20181220220359609-736422950.png" alt="img" style="zoom:90%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/1556823-20181220220359609-736422950.png" alt="img" style="zoom:90%;">
 
 <p>在<strong>系统变量</strong>中新建MYSQL_HOME</p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20201109140222488.png" alt="image-20201109140222488" style="zoom:80%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20201109140222488.png" alt="image-20201109140222488" style="zoom:80%;">
 
 <p>在<strong>系统变量</strong>中找到并<strong>双击Path</strong></p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\1556823-20181220220551145-1198958872.png" alt="img" style="zoom:80%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/1556823-20181220220551145-1198958872.png" alt="img" style="zoom:80%;">
 
 <p>点击<strong>新建</strong></p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20201109135248104.png" alt="image-20201109135248104" style="zoom:80%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20201109135248104.png" alt="image-20201109135248104" style="zoom:80%;">
 
 <p>最后点击确定。</p>
 <p><strong>如何验证是否添加成功？</strong></p>
@@ -279,14 +279,14 @@
 <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[mysql]</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8</span></span><br><span class="line"></span><br><span class="line"><span class="attr">[mysqld]</span></span><br><span class="line"><span class="attr">character-set-server</span>=<span class="string">utf8</span></span><br><span class="line"><span class="attr">default-storage-engine</span>=<span class="string">INNODB</span></span><br><span class="line"><span class="attr">sql_mode</span>=<span class="string">STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</span></span><br></pre></td></tr></table></figure>
 
 <p>把上面的文本文件另存为，在保存类型里选<strong>所有文件 (<em>.</em>)<strong>，文件名叫</strong>my.ini</strong>，存放的路径为MySQL的<strong>根目录</strong>。</p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20201109142704951.png" alt="image-20201109142704951"></p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20201109142737584.png" alt="image-20201109142737584"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20201109142704951.png" alt="image-20201109142704951"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20201109142737584.png" alt="image-20201109142737584"></p>
 <p>上面代码意思就是配置数据库的默认编码集为utf-8和默认存储引擎为INNODB。</p>
 <h4 id="2-3-3、初始化MySQL"><a href="#2-3-3、初始化MySQL" class="headerlink" title="2.3.3、初始化MySQL"></a>2.3.3、初始化MySQL</h4><p>在刚才的黑框中敲入<code>mysqld --initialize-insecure</code>，回车，稍微等待一会，如果出现没有出现报错信息(如下图)则证明data目录初始化没有问题，此时再查看MySQL目录下已经有data目录生成。</p>
 <p>tips：如果出现如下错误</p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20201109135848054.png" alt="image-20201109135848054"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20201109135848054.png" alt="image-20201109135848054"></p>
 <p>是由于权限不足导致的，去<strong>C:\Windows\System32</strong> 下以管理员方式运行 cmd.exe</p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20201109140423691.png" alt="image-20201109140423691"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20201109140423691.png" alt="image-20201109140423691"></p>
 <h4 id="2-3-4、注册MySQL服务"><a href="#2-3-4、注册MySQL服务" class="headerlink" title="2.3.4、注册MySQL服务"></a>2.3.4、注册MySQL服务</h4><p>在黑框里敲入<code>mysqld -install</code>，回车。</p>
 <h4 id="2-3-5、启动MySQL服务"><a href="#2-3-5、启动MySQL服务" class="headerlink" title="2.3.5、启动MySQL服务"></a>2.3.5、启动MySQL服务</h4><p>在黑框里敲入<code>net start mysql</code>，回车。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net start mysql  // 启动mysql服务</span><br><span class="line">    </span><br><span class="line">net stop mysql  // 停止mysql服务</span><br></pre></td></tr></table></figure>
@@ -304,7 +304,7 @@
 <p>关系型数据库是建立在关系模型基础上的数据库，简单说，关系型数据库是由多张能互相连接的 二维表 组成的数据库</p>
 </blockquote>
 <p>如下图，<strong>订单信息表</strong>和 <strong>客户信息表</strong>都是有行有列二维表，我们将这样的称为关系型数据库。</p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20210721205130231.png" alt="image-20210721205130231"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20210721205130231.png" alt="image-20210721205130231"></p>
 <p>接下来看关系型数据库的优点：</p>
 <ul>
 <li>都是使用表结构，格式一致，易于维护。</li>
@@ -316,11 +316,11 @@
 <li>数据存储在磁盘中，安全。</li>
 </ul>
 <p><strong>数据模型：</strong></p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210721212754568.png" alt="image-20210721212754568" style="zoom:70%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20210721212754568.png" alt="image-20210721212754568" style="zoom:70%;">
 
 <p>如上图，我们通过客户端可以通过数据库管理系统创建数据库，在数据库中创建表，在表中添加数据。创建的<strong>每一个数据库对应到磁盘上都是一个文件夹</strong>。</p>
 <p>而一个数据库下可以创建多张表，我们到MySQL中自带的mysql数据库的文件夹目录下：</p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210721214029913.png" alt="image-20210721214029913" style="zoom:80%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20210721214029913.png" alt="image-20210721214029913" style="zoom:80%;">
 
 <p>而上图中右边的 <code>db.frm</code> 是表文件，<code>db.MYD</code> 是数据文件，通过这两个文件就可以查询到数据展示成二维表的效果。</p>
 <p><strong>小结：</strong></p>
@@ -357,10 +357,10 @@
 </ul>
 <h3 id="3-3、SQL分类"><a href="#3-3、SQL分类" class="headerlink" title="3.3、SQL分类"></a>3.3、SQL分类</h3><ul>
 <li><p>DDL(Data Definition Language) ： 数据定义语言，用来定义数据库对象：数据库，表，列等</p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210721220032047.png" alt="image-20210721220032047" style="zoom:60%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20210721220032047.png" alt="image-20210721220032047" style="zoom:60%;">
 </li>
 <li><p>DML(Data Manipulation Language) 数据操作语言，用来对数据库中表的数据进行增删改</p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210721220132919.png" alt="image-20210721220132919" style="zoom:60%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20210721220132919.png" alt="image-20210721220132919" style="zoom:60%;">
 </li>
 <li><p>DQL(Data Query Language) 数据查询语言，用来查询数据库中表的记录(数据)</p>
 </li>
@@ -438,7 +438,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> ： 定长字符串。</span><br><span class="line">	优点：存储性能高</span><br><span class="line">	缺点：浪费空间</span><br><span class="line">	eg ： name <span class="type">char</span>(<span class="number">10</span>)  如果存储的数据字符个数不足<span class="number">10</span>个，也会占<span class="number">10</span>个的空间</span><br><span class="line"><span class="type">varchar</span> ： 变长字符串。</span><br><span class="line">	优点：节约空间</span><br><span class="line">	缺点：存储性能底</span><br><span class="line">	eg ： name <span class="type">varchar</span>(<span class="number">10</span>) 如果存储的数据字符个数不足<span class="number">10</span>个，那就数据字符个数是几就占几个的空间	</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p>MySQL 具体数据类型</p>
-<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101222928349.png" alt="image-20221101222928349"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101222928349.png" alt="image-20221101222928349"></p>
 <p><strong>案例：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">需求：设计一张学生表，请注重数据类型、长度的合理性</span><br><span class="line">	1. 编号</span><br><span class="line">	2. 姓名，姓名最长不超过10个汉字</span><br><span class="line">	3. 性别，因为取值只有两种可能，因此最多一个汉字</span><br><span class="line">	4. 生日，取值为年月日</span><br><span class="line">	5. 入学成绩，小数点后保留两位</span><br><span class="line">	6. 邮件地址，最大长度不超过 64</span><br><span class="line">	7. 家庭联系电话，不一定是手机号码，可能会出现 - 等字符</span><br><span class="line">	8. 学生状态（用数字表示，正常、休学、毕业...）</span><br></pre></td></tr></table></figure>
 
@@ -541,7 +541,7 @@
 <li><strong>条件</strong></li>
 </ul>
 <p>条件列表可以使用以下运算符</p>
-<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210722190508272.png" alt="image-20210722190508272" style="zoom:60%;">
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20210722190508272.png" alt="image-20210722190508272" style="zoom:60%;">
 
 <blockquote>
 <p>模糊查询使用like关键字，可以使用通配符进行占位:</p>
