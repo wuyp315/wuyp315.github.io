@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wuyp315.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、MySQL基础1、数据库相关概念以前做系统，数据持久化的存储采用的是文件存储。存储到文件中可以达到系统关闭数据不会丢失的效果，当然文件存储也有它的弊端。 假设在文件中存储以下的数据： 1234姓名	年龄	性别	   住址张三	23	  男	   北京西三旗李四	24	  女	   北京西二旗王五	25	  男	   西安软件新城  现要将李四这条数据的性别数据改为男，我们现学习的IO技术可以通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="黑马-JavaWeb高效学习版">
+<meta property="og:url" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/index.html">
+<meta property="og:site_name" content="Mr.武先生">
+<meta property="og:description" content="一、MySQL基础1、数据库相关概念以前做系统，数据持久化的存储采用的是文件存储。存储到文件中可以达到系统关闭数据不会丢失的效果，当然文件存储也有它的弊端。 假设在文件中存储以下的数据： 1234姓名	年龄	性别	   住址张三	23	  男	   北京西三旗李四	24	  女	   北京西二旗王五	25	  男	   西安软件新城  现要将李四这条数据的性别数据改为男，我们现学习的IO技术可以通">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101214500526.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20221101214624398.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20221101215035703.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20221101215627181.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20221101215749409.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/1556823-20181220220242472-524708778.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/1556823-20181220220359609-736422950.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20201109140222488.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/1556823-20181220220551145-1198958872.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20201109135248104.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20201109142704951.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20201109142737584.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20201109135848054.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20201109140423691.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20210721205130231.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20210721212754568.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20210721214029913.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20210721220032047.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20210721220132919.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20221101222928349.png">
+<meta property="og:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog/source/_posts/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88.assets/image-20210722190508272.png">
+<meta property="article:published_time" content="2022-11-01T13:34:02.000Z">
+<meta property="article:modified_time" content="2022-11-01T14:42:27.594Z">
+<meta property="article:author" content="5OP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101214500526.png">
+
+
+<link rel="canonical" href="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/","path":"2022/11/01/黑马-JavaWeb高效学习版/","title":"黑马-JavaWeb高效学习版"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>黑马-JavaWeb高效学习版 | Mr.武先生</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Mr.武先生</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81MySQL%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">一、MySQL基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">1、数据库相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1、数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2、数据库管理系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3、常见的数据库管理系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4%E3%80%81SQL"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4、SQL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81MySQL"><span class="nav-number">1.2.</span> <span class="nav-text">2、MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E3%80%81MySQL%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1、MySQL安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1%E3%80%81%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">2.1.1、下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2%E3%80%81%E5%AE%89%E8%A3%85-%E8%A7%A3%E5%8E%8B"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">2.1.2、安装(解压)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E3%80%81MySQL%E5%8D%B8%E8%BD%BD"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2、MySQL卸载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3%E3%80%81MySQL%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3、MySQL配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-1%E3%80%81%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">2.3.1、添加环境变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-2%E3%80%81%E6%96%B0%E5%BB%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">2.3.2、新建配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-3%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96MySQL"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">2.3.3、初始化MySQL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-4%E3%80%81%E6%B3%A8%E5%86%8CMySQL%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.2.3.4.</span> <span class="nav-text">2.3.4、注册MySQL服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-5%E3%80%81%E5%90%AF%E5%8A%A8MySQL%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.2.3.5.</span> <span class="nav-text">2.3.5、启动MySQL服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-6%E3%80%81%E4%BF%AE%E6%94%B9%E9%BB%98%E8%AE%A4%E8%B4%A6%E6%88%B7%E5%AF%86%E7%A0%81"><span class="nav-number">1.2.3.6.</span> <span class="nav-text">2.3.6、修改默认账户密码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4%E3%80%81MySQL%E7%99%BB%E9%99%86%E5%92%8C%E9%80%80%E5%87%BA"><span class="nav-number">1.2.4.</span> <span class="nav-text">2.4、MySQL登陆和退出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-1%E3%80%81%E7%99%BB%E9%99%86"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">2.4.1、登陆</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-2%E3%80%81%E9%80%80%E5%87%BA"><span class="nav-number">1.2.4.2.</span> <span class="nav-text">2.4.2、退出</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5%E3%80%81MySQL%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.5.</span> <span class="nav-text">2.5、MySQL数据模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81SQL%E6%A6%82%E8%BF%B0"><span class="nav-number">1.3.</span> <span class="nav-text">3、SQL概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1%E3%80%81SQL%E7%AE%80%E4%BB%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1、SQL简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2%E3%80%81%E9%80%9A%E7%94%A8%E8%AF%AD%E6%B3%95"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2、通用语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3%E3%80%81SQL%E5%88%86%E7%B1%BB"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.3、SQL分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81DDL-%E6%93%8D%E4%BD%9C%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.4.</span> <span class="nav-text">4、DDL:操作数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1%E3%80%81%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1、查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2%E3%80%81%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2、创建数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3%E3%80%81%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3、删除数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4%E3%80%81%E4%BD%BF%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.4、使用数据库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81DDL-%E6%93%8D%E4%BD%9C%E8%A1%A8"><span class="nav-number">1.5.</span> <span class="nav-text">5、DDL:操作表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1%E3%80%81%E6%9F%A5%E8%AF%A2%E8%A1%A8"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1、查询表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2%E3%80%81%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2、创建表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3、数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4%E3%80%81%E5%88%A0%E9%99%A4%E8%A1%A8"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4、删除表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5%E3%80%81%E4%BF%AE%E6%94%B9%E8%A1%A8"><span class="nav-number">1.5.5.</span> <span class="nav-text">5.5、修改表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E3%80%81DML"><span class="nav-number">1.6.</span> <span class="nav-text">6、DML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1%E3%80%81%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1、添加数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2%E3%80%81%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2、修改数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3%E3%80%81%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3、删除数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7%E3%80%81DQL"><span class="nav-number">1.7.</span> <span class="nav-text">7、DQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1%E3%80%81%E5%9F%BA%E7%A1%80%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1、基础查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-1%E3%80%81%E8%AF%AD%E6%B3%95"><span class="nav-number">1.7.1.1.</span> <span class="nav-text">7.1.1、语法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2%E3%80%81%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2、条件查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-1%E3%80%81%E8%AF%AD%E6%B3%95"><span class="nav-number">1.7.2.1.</span> <span class="nav-text">7.2.1、语法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3%E3%80%81%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3、排序查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-1%E3%80%81%E8%AF%AD%E6%B3%95"><span class="nav-number">1.7.3.1.</span> <span class="nav-text">7.3.1、语法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4%E3%80%81%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0"><span class="nav-number">1.7.4.</span> <span class="nav-text">7.4、聚合函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-1%E3%80%81%E6%A6%82%E5%BF%B5"><span class="nav-number">1.7.4.1.</span> <span class="nav-text">7.4.1、概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-2%E3%80%81%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0%E5%88%86%E7%B1%BB"><span class="nav-number">1.7.4.2.</span> <span class="nav-text">7.4.2、聚合函数分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-3%E3%80%81%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0%E8%AF%AD%E6%B3%95"><span class="nav-number">1.7.4.3.</span> <span class="nav-text">7.4.3、聚合函数语法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5%E3%80%81%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.5.</span> <span class="nav-text">7.5、分组查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-5-1%E3%80%81%E8%AF%AD%E6%B3%95"><span class="nav-number">1.7.5.1.</span> <span class="nav-text">7.5.1、语法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-5-2%E3%80%81%E7%BB%83%E4%B9%A0"><span class="nav-number">1.7.5.2.</span> <span class="nav-text">7.5.2、练习</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6%E3%80%81%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.7.6.</span> <span class="nav-text">7.6、分页查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-6-1%E3%80%81%E8%AF%AD%E6%B3%95"><span class="nav-number">1.7.6.1.</span> <span class="nav-text">7.6.1、语法</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">5OP</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://wuyp315.github.io/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="5OP">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.武先生">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="黑马-JavaWeb高效学习版 | Mr.武先生">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          黑马-JavaWeb高效学习版
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-01 21:34:02 / 修改时间：22:42:27" itemprop="dateCreated datePublished" datetime="2022-11-01T21:34:02+08:00">2022-11-01</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="一、MySQL基础"><a href="#一、MySQL基础" class="headerlink" title="一、MySQL基础"></a>一、MySQL基础</h1><h2 id="1、数据库相关概念"><a href="#1、数据库相关概念" class="headerlink" title="1、数据库相关概念"></a>1、数据库相关概念</h2><p>以前做系统，数据持久化的存储采用的是文件存储。存储到文件中可以达到系统关闭数据不会丢失的效果，当然文件存储也有它的弊端。</p>
+<p>假设在文件中存储以下的数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">姓名	年龄	性别	   住址</span><br><span class="line">张三	23	  男	   北京西三旗</span><br><span class="line">李四	24	  女	   北京西二旗</span><br><span class="line">王五	25	  男	   西安软件新城</span><br></pre></td></tr></table></figure>
+
+<p>现要将李四这条数据的性别数据改为男，我们现学习的IO技术可以通过将所有的数据读取到内存中，然后进行修改再存到该文件中。通过这种方式操作存在很大问题，现在只有三条数据，如果文件中存储1T的数据，那么就会发现内存根本就存储不了。</p>
+<p>现需要既能持久化存储数据，也要能避免上述问题的技术使用在我们的系统中。数据库就是这样的一门技术。</p>
+<h3 id="1-1、数据库"><a href="#1-1、数据库" class="headerlink" title="1.1、数据库"></a>1.1、数据库</h3><ul>
+<li><p><strong>存储和管理数据的仓库，数据是有组织的进行存储。</strong></p>
+</li>
+<li><p>数据库英文名是 DataBase，简称DB。</p>
+</li>
+</ul>
+<p>数据库就是将数据存储在硬盘上，可以达到持久化存储的效果。那又是如何解决上述问题的？使用数据库管理系统。</p>
+<h3 id="1-2、数据库管理系统"><a href="#1-2、数据库管理系统" class="headerlink" title="1.2、数据库管理系统"></a>1.2、数据库管理系统</h3><ul>
+<li><strong>管理数据库的大型软件</strong></li>
+<li>英文：DataBase Management System，简称 DBMS</li>
+</ul>
+<p>在电脑上安装了数据库管理系统后，就可以通过数据库管理系统创建数据库来存储数据，也可以通过该系统对数据库中的数据进行数据的增删改查相关的操作。我们平时说的MySQL数据库其实是MySQL数据库管理系统。</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/image-20221101214500526.png" alt="image-20221101214500526"></p>
+<p>通过上面的描述，大家应该已经知道了<strong>数据库管理系统</strong> 和 <strong>数据库</strong> 的关系。</p>
+<h3 id="1-3、常见的数据库管理系统"><a href="#1-3、常见的数据库管理系统" class="headerlink" title="1.3、常见的数据库管理系统"></a>1.3、常见的数据库管理系统</h3><p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101214624398.png" alt="image-20221101214624398"></p>
+<p>接下来对上面列举的数据库管理系统进行简单的介绍：</p>
+<ul>
+<li>Oracle：收费的大型数据库，Oracle 公司的产品</li>
+<li><strong>MySQL</strong>： 开源免费的中小型数据库。后来 Sun公司收购了 MySQL，而 Sun 公司又被 Oracle 收购</li>
+<li>SQL Server：MicroSoft 公司收费的中型的数据库。C#、.net 等语言常使用</li>
+<li>PostgreSQL：开源免费中小型的数据库</li>
+<li>DB2：IBM 公司的大型收费数据库产品</li>
+<li>SQLite：嵌入式的微型数据库。如：作为 Android 内置数据库</li>
+<li>MariaDB：开源免费中小型的数据库</li>
+</ul>
+<p>我们课程上学习的是MySQL数据库管理系统，PostgreSQL在一些公司也有使用，此时大家肯定会想以后在公司中如果使用我们没有学习过程的PostgreSQL数据库管理系统怎么办？这点大家大可不必担心，如下图所示：</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101215035703.png" alt="image-20221101215035703"></p>
+<p>可以通过数据库管理系统操作数据库，对数据库中的数据进行增删改查操作，而怎么样让用户跟数据库管理系统打交道呢？就可以通过一门编程语言（SQL）来实现。</p>
+<h3 id="1-4、SQL"><a href="#1-4、SQL" class="headerlink" title="1.4、SQL"></a>1.4、SQL</h3><ul>
+<li>英文：Structured Query Language，简称 SQL，结构化查询语言</li>
+<li>操作关系型数据库的编程语言</li>
+<li>定义操作所有关系型数据库的统一标准，可以使用SQL操作所有的关系型数据库管理系统，以后工作中如果使用到了其他的数据库管理系统，也同样的使用SQL来操作。</li>
+</ul>
+<h2 id="2、MySQL"><a href="#2、MySQL" class="headerlink" title="2、MySQL"></a>2、MySQL</h2><h3 id="2-1、MySQL安装"><a href="#2-1、MySQL安装" class="headerlink" title="2.1、MySQL安装"></a>2.1、MySQL安装</h3><h4 id="2-1-1、下载"><a href="#2-1-1、下载" class="headerlink" title="2.1.1、下载"></a>2.1.1、下载</h4><p><a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/community/">https://downloads.mysql.com/archives/community/</a></p>
+<p>点开上面的链接就能看到如下界面：</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101215627181.png" alt="image-20221101215627181"></p>
+<p>选择选择和自己<strong>系统位数</strong>相对应的版本点击右边的<strong>Download</strong>，此时会进到另一个页面，同样在接近页面底部的地方找到如下图所示的位置：</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101215749409.png" alt="image-20221101215749409"></p>
+<p>不用理会上面的登录和注册按钮，直接点击 <strong>No thanks, just start my download</strong>.就可以下载。</p>
+<h4 id="2-1-2、安装-解压"><a href="#2-1-2、安装-解压" class="headerlink" title="2.1.2、安装(解压)"></a>2.1.2、安装(解压)</h4><p>下载完成后我们得到的是一个压缩包，将其解压，我们就可以得到MySQL 5.7.24的软件本体了(就是一个文件夹)，我们可以把它放在你想安装的位置。</p>
+<h3 id="2-2、MySQL卸载"><a href="#2-2、MySQL卸载" class="headerlink" title="2.2、MySQL卸载"></a>2.2、MySQL卸载</h3><p>如果你想卸载MySQL，也很简单。</p>
+<p>右键开始菜单，选择**命令提示符(管理员)**，打开黑框。</p>
+<ol>
+<li><p>敲入<code>net stop mysql</code>，回车。</p>
+</li>
+<li><p>再敲入<code>mysqld -remove mysql</code>，回车。</p>
+</li>
+<li><p>最后删除MySQL目录及相关的环境变量。</p>
+</li>
+</ol>
+<h3 id="2-3、MySQL配置"><a href="#2-3、MySQL配置" class="headerlink" title="2.3、MySQL配置"></a>2.3、MySQL配置</h3><h4 id="2-3-1、添加环境变量"><a href="#2-3-1、添加环境变量" class="headerlink" title="2.3.1、添加环境变量"></a>2.3.1、添加环境变量</h4><blockquote>
+<p>环境变量里面有很多选项，这里我们只用到<code>Path</code>这个参数。为什么在初始化的开始要添加环境变量呢？<br>在黑框(即CMD)中输入一个可执行程序的名字，Windows会先在环境变量中的<code>Path</code>所指的路径中寻找一遍，如果找到了就直接执行，没找到就在当前工作目录找，如果还没找到，就报错。我们添加环境变量的目的就是能够在任意一个黑框直接调用MySQL中的相关程序而不用总是修改工作目录，大大简化了操作。</p>
+</blockquote>
+<p>右键<strong>此电脑</strong>→<strong>属性</strong>，点击<strong>高级系统设置</strong></p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\1556823-20181220220242472-524708778.png" alt="img" style="zoom:90%;">
+
+<p>点击<strong>环境变量</strong></p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\1556823-20181220220359609-736422950.png" alt="img" style="zoom:90%;">
+
+<p>在<strong>系统变量</strong>中新建MYSQL_HOME</p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20201109140222488.png" alt="image-20201109140222488" style="zoom:80%;">
+
+<p>在<strong>系统变量</strong>中找到并<strong>双击Path</strong></p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\1556823-20181220220551145-1198958872.png" alt="img" style="zoom:80%;">
+
+<p>点击<strong>新建</strong></p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20201109135248104.png" alt="image-20201109135248104" style="zoom:80%;">
+
+<p>最后点击确定。</p>
+<p><strong>如何验证是否添加成功？</strong></p>
+<p>右键开始菜单(就是屏幕左下角)，选择<strong>命令提示符(管理员)<strong>，打开黑框，敲入</strong>mysql</strong>，回车。<br>如果提示<code>Can&#39;t connect to MySQL server on &#39;localhost&#39;</code>则证明添加成功；<br>如果提示<code>mysql不是内部或外部命令，也不是可运行的程序或批处理文件</code>则表示添加添加失败，请重新检查步骤并重试。</p>
+<h4 id="2-3-2、新建配置文件"><a href="#2-3-2、新建配置文件" class="headerlink" title="2.3.2、新建配置文件"></a>2.3.2、新建配置文件</h4><p>新建一个文本文件，内容如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">[mysql]</span></span><br><span class="line"><span class="attr">default-character-set</span>=<span class="string">utf8</span></span><br><span class="line"></span><br><span class="line"><span class="attr">[mysqld]</span></span><br><span class="line"><span class="attr">character-set-server</span>=<span class="string">utf8</span></span><br><span class="line"><span class="attr">default-storage-engine</span>=<span class="string">INNODB</span></span><br><span class="line"><span class="attr">sql_mode</span>=<span class="string">STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION</span></span><br></pre></td></tr></table></figure>
+
+<p>把上面的文本文件另存为，在保存类型里选<strong>所有文件 (<em>.</em>)<strong>，文件名叫</strong>my.ini</strong>，存放的路径为MySQL的<strong>根目录</strong>。</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20201109142704951.png" alt="image-20201109142704951"></p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20201109142737584.png" alt="image-20201109142737584"></p>
+<p>上面代码意思就是配置数据库的默认编码集为utf-8和默认存储引擎为INNODB。</p>
+<h4 id="2-3-3、初始化MySQL"><a href="#2-3-3、初始化MySQL" class="headerlink" title="2.3.3、初始化MySQL"></a>2.3.3、初始化MySQL</h4><p>在刚才的黑框中敲入<code>mysqld --initialize-insecure</code>，回车，稍微等待一会，如果出现没有出现报错信息(如下图)则证明data目录初始化没有问题，此时再查看MySQL目录下已经有data目录生成。</p>
+<p>tips：如果出现如下错误</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20201109135848054.png" alt="image-20201109135848054"></p>
+<p>是由于权限不足导致的，去<strong>C:\Windows\System32</strong> 下以管理员方式运行 cmd.exe</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20201109140423691.png" alt="image-20201109140423691"></p>
+<h4 id="2-3-4、注册MySQL服务"><a href="#2-3-4、注册MySQL服务" class="headerlink" title="2.3.4、注册MySQL服务"></a>2.3.4、注册MySQL服务</h4><p>在黑框里敲入<code>mysqld -install</code>，回车。</p>
+<h4 id="2-3-5、启动MySQL服务"><a href="#2-3-5、启动MySQL服务" class="headerlink" title="2.3.5、启动MySQL服务"></a>2.3.5、启动MySQL服务</h4><p>在黑框里敲入<code>net start mysql</code>，回车。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">net start mysql  // 启动mysql服务</span><br><span class="line">    </span><br><span class="line">net stop mysql  // 停止mysql服务</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-6、修改默认账户密码"><a href="#2-3-6、修改默认账户密码" class="headerlink" title="2.3.6、修改默认账户密码"></a>2.3.6、修改默认账户密码</h4><p>在黑框里敲入<code>mysqladmin -u root password 1234</code>，这里的<code>1234</code>就是指默认管理员(即root账户)的密码，可以自行修改成你喜欢的。</p>
+<h3 id="2-4、MySQL登陆和退出"><a href="#2-4、MySQL登陆和退出" class="headerlink" title="2.4、MySQL登陆和退出"></a>2.4、MySQL登陆和退出</h3><h4 id="2-4-1、登陆"><a href="#2-4-1、登陆" class="headerlink" title="2.4.1、登陆"></a>2.4.1、登陆</h4><p>右键开始菜单，选择<strong>命令提示符</strong>，打开黑框。<br>在黑框中输入，<code>mysql -uroot -p1234</code>，回车，出现下图且左下角为**mysql&gt;**，则登录成功。</p>
+<p>登陆参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u用户名 -p密码 -h要连接的mysql服务器的ip地址(默认127.0.0.1) -P端口号(默认3306)</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-4-2、退出"><a href="#2-4-2、退出" class="headerlink" title="2.4.2、退出"></a>2.4.2、退出</h4><p>退出mysql：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br><span class="line">quit</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5、MySQL数据模型"><a href="#2-5、MySQL数据模型" class="headerlink" title="2.5、MySQL数据模型"></a>2.5、MySQL数据模型</h3><p><strong>关系型数据库：</strong></p>
+<blockquote>
+<p>关系型数据库是建立在关系模型基础上的数据库，简单说，关系型数据库是由多张能互相连接的 二维表 组成的数据库</p>
+</blockquote>
+<p>如下图，<strong>订单信息表</strong>和 <strong>客户信息表</strong>都是有行有列二维表，我们将这样的称为关系型数据库。</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20210721205130231.png" alt="image-20210721205130231"></p>
+<p>接下来看关系型数据库的优点：</p>
+<ul>
+<li>都是使用表结构，格式一致，易于维护。</li>
+<li>使用通用的 SQL 语言操作，使用方便，可用于复杂查询。<ul>
+<li>关系型数据库都可以通过SQL进行操作，所以使用方便。</li>
+<li>复杂查询。现在需要查询001号订单数据，可以看到该订单是1号客户的订单，而1号订单是李聪这个客户。以后也可以在一张表中进行统计分析等操作。</li>
+</ul>
+</li>
+<li>数据存储在磁盘中，安全。</li>
+</ul>
+<p><strong>数据模型：</strong></p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210721212754568.png" alt="image-20210721212754568" style="zoom:70%;">
+
+<p>如上图，我们通过客户端可以通过数据库管理系统创建数据库，在数据库中创建表，在表中添加数据。创建的<strong>每一个数据库对应到磁盘上都是一个文件夹</strong>。</p>
+<p>而一个数据库下可以创建多张表，我们到MySQL中自带的mysql数据库的文件夹目录下：</p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210721214029913.png" alt="image-20210721214029913" style="zoom:80%;">
+
+<p>而上图中右边的 <code>db.frm</code> 是表文件，<code>db.MYD</code> 是数据文件，通过这两个文件就可以查询到数据展示成二维表的效果。</p>
+<p><strong>小结：</strong></p>
+<ul>
+<li>MySQL中可以创建多个数据库，每个数据库对应到磁盘上的一个文件夹</li>
+<li>在每个数据库中可以创建多个表，每张都对应到磁盘上一个 frm 文件</li>
+<li>每张表可以存储多条数据，数据会被存储到磁盘中  MYD 文件中</li>
+</ul>
+<h2 id="3、SQL概述"><a href="#3、SQL概述" class="headerlink" title="3、SQL概述"></a>3、SQL概述</h2><p>了解了数据模型后，接下来我们就学习SQL语句，通过SQL语句对数据库、表、数据进行增删改查操作。 </p>
+<h3 id="3-1、SQL简介"><a href="#3-1、SQL简介" class="headerlink" title="3.1、SQL简介"></a>3.1、SQL简介</h3><ul>
+<li>英文：Structured Query Language，简称 SQL</li>
+<li>结构化查询语言，一门操作关系型数据库的编程语言</li>
+<li>定义操作所有关系型数据库的统一标准</li>
+<li>对于同一个需求，每一种数据库操作的方式可能会存在一些不一样的地方，我们称为“方言”</li>
+</ul>
+<h3 id="3-2、通用语法"><a href="#3-2、通用语法" class="headerlink" title="3.2、通用语法"></a>3.2、通用语法</h3><ul>
+<li>SQL 语句可以单行或多行书写，以分号结尾。</li>
+</ul>
+<ul>
+<li><p>MySQL 数据库的 SQL 语句不区分大小写，关键字建议使用大写。</p>
+</li>
+<li><p>注释</p>
+<ul>
+<li><p>单行注释: – 注释内容 或 #注释内容(MySQL 特有) </p>
+<blockquote>
+<p>注意：使用– 添加单行注释时，–后面一定要加空格，而#没有要求。</p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li>多行注释: &#x2F;* 注释 *&#x2F;</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-3、SQL分类"><a href="#3-3、SQL分类" class="headerlink" title="3.3、SQL分类"></a>3.3、SQL分类</h3><ul>
+<li><p>DDL(Data Definition Language) ： 数据定义语言，用来定义数据库对象：数据库，表，列等</p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210721220032047.png" alt="image-20210721220032047" style="zoom:60%;">
+</li>
+<li><p>DML(Data Manipulation Language) 数据操作语言，用来对数据库中表的数据进行增删改</p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210721220132919.png" alt="image-20210721220132919" style="zoom:60%;">
+</li>
+<li><p>DQL(Data Query Language) 数据查询语言，用来查询数据库中表的记录(数据)</p>
+</li>
+<li><p>DCL(Data Control Language) 数据控制语言，用来定义数据库的访问权限和安全级别，及创建用户</p>
+</li>
+</ul>
+<blockquote>
+<p>注意： 以后我们最常操作的是 <code>DML</code> 和 <code>DQL</code>  ，因为我们开发中最常操作的就是数据。</p>
+</blockquote>
+<h2 id="4、DDL-操作数据库"><a href="#4、DDL-操作数据库" class="headerlink" title="4、DDL:操作数据库"></a>4、DDL:操作数据库</h2><p>我们先来学习DDL来操作数据库。而操作数据库主要就是对数据库的增删查操作。</p>
+<h3 id="4-1、查询"><a href="#4-1、查询" class="headerlink" title="4.1、查询"></a>4.1、查询</h3><p>查询所有的数据库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> DATABASES;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2、创建数据库"><a href="#4-2、创建数据库" class="headerlink" title="4.2、创建数据库"></a>4.2、创建数据库</h3><ul>
+<li><strong>创建数据库</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE 数据库名称;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>创建数据库(判断，如果不存在则创建)</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> 数据库名称;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3、删除数据库"><a href="#4-3、删除数据库" class="headerlink" title="4.3、删除数据库"></a>4.3、删除数据库</h3><ul>
+<li><strong>删除数据库</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> DATABASE 数据库名称;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>删除数据库(判断，如果存在则删除)</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> DATABASE IF <span class="keyword">EXISTS</span> 数据库名称;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-4、使用数据库"><a href="#4-4、使用数据库" class="headerlink" title="4.4、使用数据库"></a>4.4、使用数据库</h3><p>数据库创建好了，要在数据库中创建表，得先明确在哪儿个数据库中操作，此时就需要使用数据库。</p>
+<ul>
+<li><strong>使用数据库</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">USE 数据库名称;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>查看当前使用的数据库</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> DATABASE();</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、DDL-操作表"><a href="#5、DDL-操作表" class="headerlink" title="5、DDL:操作表"></a>5、DDL:操作表</h2><p>操作表也就是对表进行增（Create）删（Retrieve）改（Update）查（Delete）。</p>
+<h3 id="5-1、查询表"><a href="#5-1、查询表" class="headerlink" title="5.1、查询表"></a>5.1、查询表</h3><ul>
+<li><strong>查询当前数据库下所有表名称</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> TABLES;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>查询表结构</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DESC</span> 表名称;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2、创建表"><a href="#5-2、创建表" class="headerlink" title="5.2、创建表"></a>5.2、创建表</h3><ul>
+<li><strong>创建表</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> 表名 (</span><br><span class="line">	字段名<span class="number">1</span>  数据类型<span class="number">1</span>,</span><br><span class="line">	字段名<span class="number">2</span>  数据类型<span class="number">2</span>,</span><br><span class="line">	…</span><br><span class="line">	字段名n  数据类型n</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：最后一行末尾，不能加逗号</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> tb_user (</span><br><span class="line">	id <span class="type">int</span>,</span><br><span class="line">    username <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line">    password <span class="type">varchar</span>(<span class="number">32</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3、数据类型"><a href="#5-3、数据类型" class="headerlink" title="5.3、数据类型"></a>5.3、数据类型</h3><p>MySQL 支持多种类型，可以分为三类：</p>
+<ul>
+<li><p>数值</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tinyint : 小整数型，占一个字节</span><br><span class="line"><span class="type">int</span>	： 大整数类型，占四个字节</span><br><span class="line"><span class="keyword">double</span> ： 浮点类型</span><br><span class="line">	使用格式： 字段名 <span class="keyword">double</span>(总长度,小数点后保留的位数)</span><br><span class="line">	eg ： score <span class="keyword">double</span>(<span class="number">5</span>,<span class="number">2</span>)   </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>日期</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">date</span> ： 日期值。只包含年月日</span><br><span class="line">datetime ： 混合日期和时间值。包含年月日时分秒</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>字符串</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> ： 定长字符串。</span><br><span class="line">	优点：存储性能高</span><br><span class="line">	缺点：浪费空间</span><br><span class="line">	eg ： name <span class="type">char</span>(<span class="number">10</span>)  如果存储的数据字符个数不足<span class="number">10</span>个，也会占<span class="number">10</span>个的空间</span><br><span class="line"><span class="type">varchar</span> ： 变长字符串。</span><br><span class="line">	优点：节约空间</span><br><span class="line">	缺点：存储性能底</span><br><span class="line">	eg ： name <span class="type">varchar</span>(<span class="number">10</span>) 如果存储的数据字符个数不足<span class="number">10</span>个，那就数据字符个数是几就占几个的空间	</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>MySQL 具体数据类型</p>
+<p><img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source_posts\黑马-JavaWeb高效学习版.assets\image-20221101222928349.png" alt="image-20221101222928349"></p>
+<p><strong>案例：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">需求：设计一张学生表，请注重数据类型、长度的合理性</span><br><span class="line">	1. 编号</span><br><span class="line">	2. 姓名，姓名最长不超过10个汉字</span><br><span class="line">	3. 性别，因为取值只有两种可能，因此最多一个汉字</span><br><span class="line">	4. 生日，取值为年月日</span><br><span class="line">	5. 入学成绩，小数点后保留两位</span><br><span class="line">	6. 邮件地址，最大长度不超过 64</span><br><span class="line">	7. 家庭联系电话，不一定是手机号码，可能会出现 - 等字符</span><br><span class="line">	8. 学生状态（用数字表示，正常、休学、毕业...）</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> student (</span><br><span class="line">	id <span class="type">int</span>,</span><br><span class="line">    name <span class="type">varchar</span>(<span class="number">10</span>),</span><br><span class="line">    gender <span class="type">char</span>(<span class="number">1</span>),</span><br><span class="line">    birthday <span class="type">date</span>,</span><br><span class="line">    score <span class="keyword">double</span>(<span class="number">5</span>,<span class="number">2</span>),</span><br><span class="line">    email <span class="type">varchar</span>(<span class="number">15</span>),</span><br><span class="line">    tel <span class="type">varchar</span>(<span class="number">15</span>),</span><br><span class="line">    status tinyint</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4、删除表"><a href="#5-4、删除表" class="headerlink" title="5.4、删除表"></a>5.4、删除表</h3><ul>
+<li><strong>删除表</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> 表名;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>删除表时判断表是否存在</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> 表名;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-5、修改表"><a href="#5-5、修改表" class="headerlink" title="5.5、修改表"></a>5.5、修改表</h3><ul>
+<li><strong>修改表名</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名 RENAME <span class="keyword">TO</span> 新的表名;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将表名student修改为stu</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student rename <span class="keyword">to</span> stu;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>添加一列</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名 <span class="keyword">ADD</span> 列名 数据类型;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 给stu表添加一列address，该字段类型是varchar(50)</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu <span class="keyword">add</span> address <span class="type">varchar</span>(<span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>修改数据类型</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名 MODIFY 列名 新数据类型;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将stu表中的address字段的类型改为 char(50)</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu modify address <span class="type">char</span>(<span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>修改列名和数据类型</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名 CHANGE 列名 新列名 新数据类型;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将stu表中的address字段名改为 addr，类型改为varchar(50)</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu change address addr <span class="type">varchar</span>(<span class="number">50</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>删除列</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> 表名 <span class="keyword">DROP</span> 列名;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 将stu表中的addr字段 删除</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu <span class="keyword">drop</span> addr;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6、DML"><a href="#6、DML" class="headerlink" title="6、DML"></a>6、DML</h2><p>DML主要是对数据进行增（insert）删（delete）改（update）操作。</p>
+<h3 id="6-1、添加数据"><a href="#6-1、添加数据" class="headerlink" title="6.1、添加数据"></a>6.1、添加数据</h3><ul>
+<li><strong>给指定列添加数据</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> 表名(列名<span class="number">1</span>,列名<span class="number">2</span>,…) <span class="keyword">VALUES</span>(值<span class="number">1</span>,值<span class="number">2</span>,…);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>给全部列添加数据</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> 表名 <span class="keyword">VALUES</span>(值<span class="number">1</span>,值<span class="number">2</span>,…);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>批量添加数据</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> 表名(列名<span class="number">1</span>,列名<span class="number">2</span>,…) <span class="keyword">VALUES</span>(值<span class="number">1</span>,值<span class="number">2</span>,…),(值<span class="number">1</span>,值<span class="number">2</span>,…),(值<span class="number">1</span>,值<span class="number">2</span>,…)…;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> 表名 <span class="keyword">VALUES</span>(值<span class="number">1</span>,值<span class="number">2</span>,…),(值<span class="number">1</span>,值<span class="number">2</span>,…),(值<span class="number">1</span>,值<span class="number">2</span>,…)…;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2、修改数据"><a href="#6-2、修改数据" class="headerlink" title="6.2、修改数据"></a>6.2、修改数据</h3><ul>
+<li><strong>修改表数据</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> 表名 <span class="keyword">SET</span> 列名<span class="number">1</span><span class="operator">=</span>值<span class="number">1</span>,列名<span class="number">2</span><span class="operator">=</span>值<span class="number">2</span>,… [<span class="keyword">WHERE</span> 条件] ;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<ol>
+<li>修改语句中如果不加条件，则将所有数据都修改！</li>
+<li>像上面的语句中的中括号，表示在写sql语句中可以省略这部分</li>
+</ol>
+</blockquote>
+<h3 id="6-3、删除数据"><a href="#6-3、删除数据" class="headerlink" title="6.3、删除数据"></a>6.3、删除数据</h3><ul>
+<li><strong>删除数据</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> 表名 [<span class="keyword">WHERE</span> 条件] ;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>练习</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 删除张三记录</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> stu <span class="keyword">where</span> name <span class="operator">=</span> <span class="string">&#x27;张三&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除stu表中所有的数据</span></span><br><span class="line"><span class="keyword">delete</span> <span class="keyword">from</span> stu;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7、DQL"><a href="#7、DQL" class="headerlink" title="7、DQL"></a>7、DQL</h2><p>查询的完整语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    字段列表</span><br><span class="line"><span class="keyword">FROM</span> </span><br><span class="line">    表名列表 </span><br><span class="line"><span class="keyword">WHERE</span> </span><br><span class="line">    条件列表</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span></span><br><span class="line">    分组字段</span><br><span class="line"><span class="keyword">HAVING</span></span><br><span class="line">    分组后条件</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span></span><br><span class="line">    排序字段</span><br><span class="line">LIMIT</span><br><span class="line">    分页限定</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-1、基础查询"><a href="#7-1、基础查询" class="headerlink" title="7.1、基础查询"></a>7.1、基础查询</h3><h4 id="7-1-1、语法"><a href="#7-1-1、语法" class="headerlink" title="7.1.1、语法"></a>7.1.1、语法</h4><ul>
+<li><strong>查询多个字段</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 字段列表 <span class="keyword">FROM</span> 表名;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> 表名; <span class="comment">-- 查询所有数据</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>去除重复记录</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> 字段列表 <span class="keyword">FROM</span> 表名;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>起别名</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">AS</span>: <span class="keyword">AS</span> 也可以省略</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2、条件查询"><a href="#7-2、条件查询" class="headerlink" title="7.2、条件查询"></a>7.2、条件查询</h3><h4 id="7-2-1、语法"><a href="#7-2-1、语法" class="headerlink" title="7.2.1、语法"></a>7.2.1、语法</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 字段列表 <span class="keyword">FROM</span> 表名 <span class="keyword">WHERE</span> 条件列表;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>条件</strong></li>
+</ul>
+<p>条件列表可以使用以下运算符</p>
+<img src="/2022/11/01/%E9%BB%91%E9%A9%AC-JavaWeb%E9%AB%98%E6%95%88%E5%AD%A6%E4%B9%A0%E7%89%88/blog\source\_posts\黑马-JavaWeb高效学习版.assets\image-20210722190508272.png" alt="image-20210722190508272" style="zoom:60%;">
+
+<blockquote>
+<p>模糊查询使用like关键字，可以使用通配符进行占位:</p>
+<p>（1）_ : 代表单个任意字符</p>
+<p>（2）% : 代表任意个数字符</p>
+</blockquote>
+<h3 id="7-3、排序查询"><a href="#7-3、排序查询" class="headerlink" title="7.3、排序查询"></a>7.3、排序查询</h3><h4 id="7-3-1、语法"><a href="#7-3-1、语法" class="headerlink" title="7.3.1、语法"></a>7.3.1、语法</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 字段列表 <span class="keyword">FROM</span> 表名 <span class="keyword">ORDER</span> <span class="keyword">BY</span> 排序字段名<span class="number">1</span> [排序方式<span class="number">1</span>],排序字段名<span class="number">2</span> [排序方式<span class="number">2</span>] …;</span><br></pre></td></tr></table></figure>
+
+<p>上述语句中的排序方式有两种，分别是：</p>
+<ul>
+<li>ASC ： 升序排列 <strong>（默认值）</strong></li>
+<li>DESC ： 降序排列</li>
+</ul>
+<blockquote>
+<p>注意：如果有多个排序条件，当前边的条件值一样时，才会根据第二条件进行排序</p>
+</blockquote>
+<h3 id="7-4、聚合函数"><a href="#7-4、聚合函数" class="headerlink" title="7.4、聚合函数"></a>7.4、聚合函数</h3><h4 id="7-4-1、概念"><a href="#7-4-1、概念" class="headerlink" title="7.4.1、概念"></a>7.4.1、概念</h4><p> <strong>将一列数据作为一个整体，进行纵向计算。</strong></p>
+<h4 id="7-4-2、聚合函数分类"><a href="#7-4-2、聚合函数分类" class="headerlink" title="7.4.2、聚合函数分类"></a>7.4.2、聚合函数分类</h4><table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>count(列名)</td>
+<td>统计数量（一般选用不为null的列）</td>
+</tr>
+<tr>
+<td>max(列名)</td>
+<td>最大值</td>
+</tr>
+<tr>
+<td>min(列名)</td>
+<td>最小值</td>
+</tr>
+<tr>
+<td>sum(列名)</td>
+<td>求和</td>
+</tr>
+<tr>
+<td>avg(列名)</td>
+<td>平均值</td>
+</tr>
+</tbody></table>
+<h4 id="7-4-3、聚合函数语法"><a href="#7-4-3、聚合函数语法" class="headerlink" title="7.4.3、聚合函数语法"></a>7.4.3、聚合函数语法</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 聚合函数名(列名) <span class="keyword">FROM</span> 表;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：null 值不参与所有聚合函数运算</p>
+</blockquote>
+<h3 id="7-5、分组查询"><a href="#7-5、分组查询" class="headerlink" title="7.5、分组查询"></a>7.5、分组查询</h3><h4 id="7-5-1、语法"><a href="#7-5-1、语法" class="headerlink" title="7.5.1、语法"></a>7.5.1、语法</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 字段列表 <span class="keyword">FROM</span> 表名 [<span class="keyword">WHERE</span> 分组前条件限定] <span class="keyword">GROUP</span> <span class="keyword">BY</span> 分组字段名 [<span class="keyword">HAVING</span> 分组后条件过滤];</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：分组之后，查询的字段为聚合函数和分组字段，查询其他字段无任何意义</p>
+</blockquote>
+<h4 id="7-5-2、练习"><a href="#7-5-2、练习" class="headerlink" title="7.5.2、练习"></a>7.5.2、练习</h4><ul>
+<li><p>查询男同学和女同学各自的数学平均分</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sex, <span class="built_in">avg</span>(math) <span class="keyword">from</span> stu <span class="keyword">group</span> <span class="keyword">by</span> sex;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> name, sex, <span class="built_in">avg</span>(math) <span class="keyword">from</span> stu <span class="keyword">group</span> <span class="keyword">by</span> sex;  <span class="comment">-- 这里查询name字段就没有任何意义</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询男同学和女同学各自的数学平均分，以及各自人数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sex, <span class="built_in">avg</span>(math),<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> stu <span class="keyword">group</span> <span class="keyword">by</span> sex;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询男同学和女同学各自的数学平均分，以及各自人数，要求：分数低于70分的不参与分组</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sex, <span class="built_in">avg</span>(math),<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> stu <span class="keyword">where</span> math <span class="operator">&gt;</span> <span class="number">70</span> <span class="keyword">group</span> <span class="keyword">by</span> sex;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询男同学和女同学各自的数学平均分，以及各自人数，要求：分数低于70分的不参与分组，分组之后人数大于2个的</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> sex, <span class="built_in">avg</span>(math),<span class="built_in">count</span>(<span class="operator">*</span>) <span class="keyword">from</span> stu <span class="keyword">where</span> math <span class="operator">&gt;</span> <span class="number">70</span> <span class="keyword">group</span> <span class="keyword">by</span> sex <span class="keyword">having</span> <span class="built_in">count</span>(<span class="operator">*</span>)  <span class="operator">&gt;</span> <span class="number">2</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>where 和 having 区别：</strong></p>
+<ul>
+<li><p>执行时机不一样：where 是分组之前进行限定，不满足where条件，则不参与分组，而having是分组之后对结果进行过滤。</p>
+</li>
+<li><p>可判断的条件不一样：where 不能对聚合函数进行判断，having 可以。</p>
+</li>
+</ul>
+<h3 id="7-6、分页查询"><a href="#7-6、分页查询" class="headerlink" title="7.6、分页查询"></a>7.6、分页查询</h3><h4 id="7-6-1、语法"><a href="#7-6-1、语法" class="headerlink" title="7.6.1、语法"></a>7.6.1、语法</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> 字段列表 <span class="keyword">FROM</span> 表名 LIMIT  起始索引 , 查询条目数;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意： 上述语句中的起始索引是从0开始</p>
+</blockquote>
+<p>起始索引计算公式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">起始索引 <span class="operator">=</span> (当前页码 <span class="operator">-</span> <span class="number">1</span>) <span class="operator">*</span> 每页显示的条数</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/10/29/JDBC/" rel="prev" title="JDBC">
+                  <i class="fa fa-chevron-left"></i> JDBC
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">5OP</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
